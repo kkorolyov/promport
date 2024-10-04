@@ -4,7 +4,6 @@ from os import environ
 from typing import BinaryIO
 
 data = environ["DATA"]
-prometheusUrl = environ["PROMETHEUS_URL"]
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -59,23 +58,14 @@ def checkArgs():
         print("missing DATA env var")
         exit(1)
 
-    if not prometheusUrl:
-        print("missing PROMETHEUS_URL env var")
-        exit(1)
 
-
-def startServer():
+def main():
     address = "localhost"
     port = 9191
 
     httpd = HTTPServer((address, port), Handler)
     print(f"started server at {address}:{port}, with config (data={data})")
     httpd.serve_forever()
-
-
-def main():
-    checkArgs()
-    startServer()
 
 
 if __name__ == "__main__":

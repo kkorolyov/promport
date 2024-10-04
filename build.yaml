@@ -17,9 +17,10 @@ spec:
               value: master
             - name: PROMETHEUS_URL
               value: https://github.com/prometheus/prometheus/releases/download/v2.54.1/prometheus-2.54.1.linux-arm64.tar.gz
-          envFrom:
-            - configMapRef:
-                name: build-promport
+            - name: TAG
+              value: latest
+            - name: REGISTRY
+              value: <SETME>
           command: ["/bin/bash", "-c"]
           args:
             - >-
