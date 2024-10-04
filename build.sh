@@ -1,10 +1,12 @@
 set -e
 
-# mount scratch image
-container=$(buildah from scratch)
+cwd=$(dirname "$0")
 
-# install packages to image
+# mount scratch
+container=$(buildah from scratch)
 containermnt=$(buildah mount $container)
+
+# install packages
 dnf install\
 	--setopt cachedir=/var/cache/dnf\
 	--setopt reposdir=/etc/yum.repos.d\
@@ -12,19 +14,15 @@ dnf install\
 	--setopt tsflags=nodocs\
 	--releasever 40\
 	--installroot $containermnt\
-	-y glibc-minimal-langpack python-pip
-buildah unmount $container
+	-y\
+	glibc-minimal-langpack python-pip
 
-# download and copy promtool to image
-wget -O- "$PROMETHEUS_URL" | tar -xzf - --wildcards '*promtool' --strip-components=1
-buildah copy $container promtool
-rm -rf promtool
+# download and copy promtool
+wget -O- "$PROMETHEUS_URL" | tar -C $cwd -xzf - --wildcards '*promtool' --strip-components=1
+buildah copy $container ${cwd}/promtool
 
 # install python module
-buildah copy $container src/ src/
-buildah copy $container pyproject.toml
-buildah run $container python3 -m pip install --user .
-buildah run $container rm -rf src pyproject.toml
+pip3 install --prefix=${containermnt}/usr $cwd
 
 # setup entrypoint
 buildah config --entrypoint "python3 -m promport" $container

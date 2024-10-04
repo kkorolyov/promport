@@ -24,7 +24,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              dnf install -y git wget;
+              dnf install -y git wget python-pip;
               git clone $REPO repo;
               cd repo;
               git checkout $SHA;
