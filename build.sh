@@ -32,4 +32,4 @@ buildah config --entrypoint "python3 -m promport" $container
 # publish
 image=$(buildah commit $container)
 buildah rm $container
-buildah push $image "docker://${REGISTRY}/promport:${TAG}"
+buildah push --tls-verify=false $image "docker://${REGISTRY}/promport:${TAG}"
