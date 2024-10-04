@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-promport-oci
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    spec:
+      containers:
+        - name: buildah
+          image: quay.io/buildah/stable
+          env:
+            - name: REPO
+              value: https://github.com/kkorolyov/pieline.git
+            - name: SHA
+              value: master
+            - name: PROMETHEUS_URL
+              value: https://github.com/prometheus/prometheus/releases/download/v2.54.1/prometheus-2.54.1.linux-arm64.tar.gz
+          command: ["/bin/bash", "-c"]
+          args:
+            - >-
+              dnf install -y make python-pip;
+              git clone $REPO repo;
+              cd repo;
+              git checkout $SHA;
+              ./build.sh;
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 500Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+      restartPolicy: Never
