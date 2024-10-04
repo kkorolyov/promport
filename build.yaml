@@ -4,6 +4,7 @@ metadata:
   name: build-promport-oci
 spec:
   ttlSecondsAfterFinished: 60
+  backoffLimit: 0
   template:
     spec:
       containers:
@@ -11,19 +12,22 @@ spec:
           image: quay.io/buildah/stable
           env:
             - name: REPO
-              value: https://github.com/kkorolyov/pieline.git
+              value: https://github.com/kkorolyov/promport.git
             - name: SHA
               value: master
             - name: PROMETHEUS_URL
               value: https://github.com/prometheus/prometheus/releases/download/v2.54.1/prometheus-2.54.1.linux-arm64.tar.gz
+          envFrom:
+            - configMapRef:
+                name: build-promport
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              dnf install -y make python-pip;
+              dnf install -y git wget;
               git clone $REPO repo;
               cd repo;
               git checkout $SHA;
-              ./build.sh;
+              sh build.sh;
           securityContext:
             privileged: true
           resources:

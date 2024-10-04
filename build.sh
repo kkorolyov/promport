@@ -23,13 +23,13 @@ rm -rf promtool
 # install python module
 buildah copy $container src/ src/
 buildah copy $container pyproject.toml
-python3 -m pip install --user .
+buildah run $container python3 -m pip install --user .
 buildah run $container rm -rf src pyproject.toml
 
 # setup entrypoint
-buildah config --entrypoint "python3 -m promport"
+buildah config --entrypoint "python3 -m promport" $container
 
 # publish
-image=buildah commit $container promport
+image=$(buildah commit $container)
 buildah rm $container
 buildah push $image "docker://${REGISTRY}/promport:${TAG}"
