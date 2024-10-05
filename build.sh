@@ -25,7 +25,7 @@ buildah copy $container ${cwd}/promtool
 pip3 install --prefix=${containermnt}/usr ./$cwd
 
 # setup entrypoint
-buildah config --entrypoint "python3 -m promport" $container
+buildah config --entrypoint "python3 -um promport" $container
 
 # publish
 image=$(buildah commit $container)
