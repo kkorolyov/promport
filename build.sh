@@ -22,7 +22,7 @@ wget -O- "$PROMETHEUS_URL" | tar -C $cwd -xzf - --wildcards '*promtool' --strip-
 buildah copy $container ${cwd}/promtool
 
 # install python module
-pip3 install --prefix=${containermnt}/usr $cwd
+pip3 install --prefix=${containermnt}/usr ./$cwd
 
 # setup entrypoint
 buildah config --entrypoint "python3 -m promport" $container
