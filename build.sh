@@ -19,7 +19,7 @@ dnf install\
 
 # download and copy promtool
 wget -O- "$PROMETHEUS_URL" | tar -C $cwd -xzf - --wildcards '*promtool' --strip-components=1
-buildah copy $container ${cwd}/promtool
+buildah copy $container ${cwd}/promtool /usr/bin/promtool
 
 # install python module
 pip3 install --prefix=${containermnt}/usr ./$cwd

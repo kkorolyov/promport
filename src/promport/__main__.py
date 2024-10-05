@@ -28,7 +28,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(500, str(e))
 
     def _writeFile(self, b: BinaryIO):
-        importFile = "import.om"
+        importFile = f"{data}/import.om"
         with open(importFile, "wb") as f:
             print(f"writing request data to {importFile}...")
             f.writelines(b)
