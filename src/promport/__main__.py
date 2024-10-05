@@ -60,7 +60,7 @@ def checkArgs():
 
 
 def main():
-    address = "localhost"
+    address = "0.0.0.0"
     port = 9191
 
     httpd = HTTPServer((address, port), Handler)
